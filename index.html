@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Konversi</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            color: white;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: url("bg.jpg");
+            background-size: cover;
+            height: 100vh;
+            background-position: top center;
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(88,46,70, 0.7);
+            width: 90%;
+            max-width: 600px;
+            border-radius: 20px;
+            border-bottom: 20px solid rgba(255, 255, 255, 0.7);
+            padding: 40px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
+        }
+
+        .container > h1 {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            color: #fff;
+            border-bottom: 4px solid rgba(255, 255, 255, 0.7);
+        }
+
+        .form-group {
+            padding: 24px 0;
+        }
+
+        .form-group .control-label {
+            position: relative;
+            float: left;
+            width: 15%;
+            padding-top: 8px;
+            padding-right: 16px;
+            margin-bottom: 0;
+            text-align: right;
+            font-size: 18px;
+            font-weight: 400;
+            color: #fff;
+        }
+
+        .form-group .control-input {
+            position: relative;
+            float: left;
+            width: 85%;
+        }
+        .form-group .form-control {
+            display: block;
+            width: 100%;
+            height: 36px;
+            margin: 0;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #212121;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 1px solid #E0E0E0;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.75);
+            transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+        }
+
+        .form-group .form-control:focus {
+            border-color: #871C1C;
+            outline: 0;
+            box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.75), 0 0 8px rgba(211, 49, 49, 0.6);
+        }
+
+        @media (max-width: 360px) {
+            .container > h1 {
+                font-size: 20px;
+                margin-bottom: 8px;
+            }
+
+            .form-group .control-label {
+                width: 100%;
+                text-align: left;
+            }
+
+            .form-group .control-input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>KONVERSI</h1>
+        <div class="form-group">
+            <label class="control-label">DEC</label>
+            <div class="control-input">
+                <input type="text" id="inp-dec" class="form-control" onkeyup="exeDec()">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">OCT</label>
+            <div class="control-input">
+                <input type="text" id="inp-oct" class="form-control" onkeyup="exeOct()">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">HEX</label>
+            <div class="control-input">
+                <input type="text" id="inp-hex" class="form-control" onkeyup="exeHex()">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label">BIN</label>
+            <div class="control-input">
+                <input type="text" id="inp-bin" class="form-control" onkeyup="exeBin()">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        inpDec = document.getElementById("inp-dec");
+        inpOct = document.getElementById("inp-oct");
+        inpHex = document.getElementById("inp-hex");
+        inpBin = document.getElementById("inp-bin");
+    
+        function exeDec() {
+            input = inpDec.value;
+            inpOct.value = converter(input, 10, 8);
+            inpHex.value = converter(input, 10, 16);
+            inpBin.value = converter(input, 10, 2);
+        }
+        function exeOct() {
+            input = inpOct.value;
+            inpDec.value = converter(input, 8, 10);
+            inpHex.value = converter(input, 8, 16);
+            inpBin.value = converter(input, 8, 2);
+        }
+        function exeHex() {
+            input = inpHex.value;
+            inpDec.value = converter(input, 16, 10);
+            inpOct.value = converter(input, 16, 8);
+            inpBin.value = converter(input, 16, 2);
+        }
+        function exeBin() {
+            input = inpBin.value;
+            inpDec.value = converter(input, 2, 10);
+            inpOct.value = converter(input, 2, 8);
+            inpHex.value = converter(input, 2, 16);
+        }
+    
+        function converter(input, from, to) {
+            // Memisahkan bagian desimal dan bilangan bulat
+            let parts = input.split('.');
+            let integerPart = parts[0];
+            let decimalPart = parts[1] || '';
+    
+            // Konversi bagian bilangan bulat
+            let convertInteger = parseInt(integerPart, from).toString(to);
+    
+            // Konversi bagian desimal
+            let convertDecimal = '';
+            if (decimalPart !== '') {
+                let decimalValue = parseInt(decimalPart, from) / Math.pow(from, decimalPart.length);
+                convertDecimal = convertDecimalFraction(decimalValue, to);
+            }
+    
+            let result = convertInteger;
+            if (convertDecimal !== '') {
+                result += '.' + convertDecimal;
+            }
+    
+            if (result === "NaN") {
+                result = "";
+            }
+    
+            if (to === 16) {
+                result = result.toUpperCase();
+            }
+    
+            return result;
+        }
+    
+        // Fungsi untuk konversi bagian desimal fraksional
+        function convertDecimalFraction(decimalValue, toBase) {
+            let result = '';
+            for (let i = 0; i < 5; i++) { // Ambil hingga 5 digit desimal
+                decimalValue *= toBase;
+                let digit = Math.floor(decimalValue);
+                result += digit.toString(toBase);
+                decimalValue -= digit;
+            }
+            return result;
+        }
+    </script>
+</body>
+</html>
